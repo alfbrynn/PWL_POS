@@ -23,7 +23,9 @@ class UserController extends Controller
 
         $activeMenu = 'user'; // set menu yang sedang aktif
 
-        return view('user.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
+        $level = LevelModel::all(); // ambil data level untuk filter level
+
+        return view('user.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'level' => $level, 'activeMenu' => $activeMenu]);
     }
 
     // Ambil data user dalam bentuk json untuk datatables 
@@ -31,6 +33,13 @@ class UserController extends Controller
     { 
         $users = UserModel::select('user_id', 'username', 'nama', 'level_id') 
                     ->with('level'); 
+
+        // filter data user berdasarkan level_id
+        if ($request->level_id) {
+            $users->where('level_id', $request->level_id);
+        }
+
+        // \Log::info($users->toSql(), ['level_id' => $request->level_id]);
     
         return DataTables::of($users) 
             // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex) 
@@ -38,11 +47,9 @@ class UserController extends Controller
             ->addColumn('aksi', function ($user) {  // menambahkan kolom aksi 
                 $btn  = '<a href="'.url('/user/' . $user->user_id).'" class="btn btn-info btn-sm">Detail</a> '; 
                 $btn .= '<a href="'.url('/user/' . $user->user_id . '/edit').'" class="btn btn-warning btn-sm">Edit</a> '; 
-                $btn .= '<form class="d-inline-block" method="POST" action="'. 
-    url('/user/'.$user->user_id).'">' 
+                $btn .= '<form class="d-inline-block" method="POST" action="'. url('/user/'.$user->user_id).'">' 
                         . csrf_field() . method_field('DELETE') .  
-                        '<button type="submit" class="btn btn-danger btn-sm" onclick="return 
-    confirm(\'Apakah Anda yakit menghapus data ini?\');">Hapus</button></form>';      
+                        '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakit menghapus data ini?\');">Hapus</button></form>';      
                 return $btn; 
             }) 
             ->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html 
