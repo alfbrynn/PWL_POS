@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LevelModel extends Model
 {
+
+    protected $table = 'm_level'; // Sesuaikan dengan nama tabel yang benar
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(UserModel::class);
