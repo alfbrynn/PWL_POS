@@ -9,6 +9,9 @@ class LevelModel extends Model
 {
 
     protected $table = 'm_level'; // Sesuaikan dengan nama tabel yang benar
+    protected $primaryKey = 'level_id';
+
+    protected $fillable = ['level_kode', 'level_nama']; // Field yang bisa diisi
 
     public function user(): BelongsTo
     {
