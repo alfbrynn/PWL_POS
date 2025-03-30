@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class KategoriModel extends Model
 {
-    public function barang(): HasMany
-    {
-        return $this->hasMany(BarangModel::class, 'barang_id', 'barang_id');
-    }
+    protected $table = 'm_kategori'; // Sesuaikan dengan nama tabel yang benar
+    protected $primaryKey = 'kategori_id';
+
+    protected $fillable = ['kategori_code', 'kategori_nama']; // Field yang bisa diisi
 }
