@@ -64,6 +64,11 @@
           <p>Transaksi Penjualan</p> 
         </a> 
       </li> 
+      <li class="nav-item">
+          <a href="{{ url('logout') }}" class="nav-link text-danger" onclick="return confirm('Yakin ingin logout?')">
+              <i class="fas fa-sign-out-alt"></i> Logout
+          </a>
+      </li>
     </ul> 
   </nav> 
 </div>  
