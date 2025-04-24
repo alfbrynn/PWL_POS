@@ -132,5 +132,29 @@
           <i class="fas fa-th-large"></i>
         </a>
       </li>
+      <!-- User Dropdown -->
+    <li class="nav-item dropdown">
+      <a class="nav-link d-flex align-items-center" data-toggle="dropdown" href="#" role="button" style="padding: 0 10px;">
+        <img src="{{ asset('uploads/' . (auth()->user()->foto ?? 'default.jpg')) }}"
+            alt="User Image"
+            style="width:32px; height:32px; border-radius:50%; object-fit:cover; border: 2px solid #ccc;">
+        <span style="margin-left: 8px; font-size: 14px; color: #333;">
+          {{ auth()->user()->username }} 
+          {{-- / {{ auth()->user()->nama }} --}}
+        </span>
+        <i class="fas fa-caret-down ml-1" style="font-size: 12px; color: #555;"></i>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right">
+        <a href="{{ route('profil.index') }}" class="dropdown-item">
+          <i class="fas fa-user mr-2"></i> Detail Profil
+        </a>
+        <div class="dropdown-divider"></div>
+        <a href="{{ url('logout') }}" class="dropdown-item text-danger"
+          onclick="return confirm('Yakin ingin logout?')">
+          <i class="fas fa-sign-out-alt mr-2"></i> Log Out
+        </a>
+      </div>
+    </li>
     </ul>
+    
   </nav>

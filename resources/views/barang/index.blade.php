@@ -130,8 +130,15 @@
                 {{-- <a href="{{ url('/barang/create') }}" class="btn btn-primary">Tambah Data</a> --}}
                 <a href="{{ url('/barang/export_excel') }}" class="btn btn-primary">
                     <i class="fa fa-file-excel"></i> Export Barang </a>
-                <a href="{{ url('/barang/export_pdf') }}" class="btn btn-warning">
-                    <i class="fa fa-file-pdf"></i> Export Barang </a>
+                {{-- <a href="{{ url('/barang/export_pdf') }}" class="btn btn-warning">
+                    <i class="fa fa-file-pdf"></i> Export Barang </a> --}}
+                <form method="POST" action="{{ url('/barang/export_pdf') }}" style="display: inline;">
+                    @csrf
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fa fa-file-pdf"></i> Export Barang
+                    </button>
+                </form>
+
                 <button onclick="modalAction('{{ url('/barang/create_ajax') }}')" class="btn btn-success">Tambah Data
                     (Ajax)</button>
             </div>
@@ -194,9 +201,9 @@
             });
         }
 
-        var tableBarang;
+        var dataBarang;
         $(document).ready(function () {
-            tableBarang = $('#table-barang').DataTable({
+            dataBarang = $('#table-barang').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -207,69 +214,44 @@
                         d.filter_kategori = $('.filter_kategori').val();
                     }
                 },
-                columns: [
-                    {
-                        data: "DT_RowIndex",
-                        className: "text-center",
-                        orderable: false,
-                        searchable: false
-                    },
-                    // {
-                    //     data: "No_Urut",
-                    //     className: "text-center",
-                    //     width: "5%",
-                    //     orderable: false,
-                    //     searchable: false
-                    // },
-                    {
-                        data: "barang_kode",
-                        className: "",
-                        width: "10%",
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: "barang_nama",
-                        className: "",
-                        width: "37%",
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: "harga_beli",
-                        className: "",
-                        width: "10%",
-                        orderable: true,
-                        searchable: false,
-                        render: function (data) {
-                            return new Intl.NumberFormat('id-ID').format(data);
-                        }
-                    },
-                    {
-                        data: "harga_jual",
-                        className: "",
-                        width: "10%",
-                        orderable: true,
-                        searchable: false,
-                        render: function (data) {
-                            return new Intl.NumberFormat('id-ID').format(data);
-                        }
-                    },
-                    {
-                        data: "kategori.kategori_nama",
-                        className: "",
-                        width: "14%",
-                        orderable: true,
-                        searchable: false
-                    },
-                    {
-                        data: "aksi",
-                        className: "text-center",
-                        width: "14%",
-                        orderable: false,
-                        searchable: false
-                    }
-                ]
+                columns: [ 
+            { 
+              data: "DT_RowIndex",             
+              className: "text-center", 
+              orderable: false, 
+              searchable: false     
+            },{
+              data: "barang_kode",                
+              className: "", 
+              orderable: true,     
+              searchable: true     
+            },{
+              data: "barang_nama",                
+              className: "", 
+              orderable: true,     
+              searchable: true     
+            },{
+              data: "kategori.kategori_nama",                
+              className: "", 
+              orderable: false,     
+              searchable: false     
+            },{
+              data: "harga_beli",                
+              className: "text-right", 
+              orderable: true,     
+              searchable: false     
+            },{
+              data: "harga_jual",                
+              className: "text-right", 
+              orderable: true,     
+              searchable: false     
+            },{
+              data: "aksi",                
+              className: "", 
+              orderable: false,      
+              searchable: false     
+            } 
+          ] 
             });
 
             $('#table-barang_filter input').unbind().bind().on('keyup', function (e) {

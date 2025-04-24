@@ -72,6 +72,10 @@ class="h1"><b>Admin</b>LTE</a></div>
           <!-- /.col --> 
         </div> 
       </form> 
+      <p class="mb-0 mt-3 text-center">
+      <a href="{{ route('register.form') }}" class="text-center">Belum punya akun? Daftar di sini</a>
+    </p>
+
     </div> 
     <!-- /.card-body --> 
   </div> 

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\ProfilController;
+
 use App\Models\KategoriModel;
 use Database\Seeders\KategoriSeeder;
 
@@ -17,9 +19,15 @@ Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'postlogin']);
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth');
 
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register.form');
+Route::post('/register/ajax', [AuthController::class, 'registerAjax'])->name('register.ajax');
+
 Route::middleware(['auth'])->group(function () { // artinya semua route di dalam group ini harus login dulu
     // masukkan semua route yang perlu autentikasi di sini
     Route::get('/', [WelcomeController::class, 'index']);
+
+    Route::get('/profil', [ProfilController::class, 'index'])->name('profil.index');
+    Route::post('/profil/update-foto', [ProfilController::class, 'updateFoto'])->name('profil.updateFoto');
 
     Route::group(['prefix' => 'user'], function () {
         Route::get('/', [UserController::class, 'index']); // menampilkan halaman awal user
@@ -113,7 +121,8 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
         Route::get('/import', [BarangController::class, 'import']);
         Route::post('/import_ajax', [BarangController::class, 'import_ajax']);
         Route::get('/export_excel', [BarangController::class, 'export_excel']);
-        Route::get('/export_pdf', [BarangController::class, 'export_pdf']);
+        // Route::get('/export_pdf', [BarangController::class, 'export_pdf']);
+        Route::post('/export_pdf', [BarangController::class, 'export_pdf']);
     });
 
 });

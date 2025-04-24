@@ -44,12 +44,12 @@ class BarangController extends Controller
         return DataTables::of($barang)
             ->addIndexColumn()
             ->addColumn('aksi', function ($barang) {
-                // $btn  = '<a href="'.url('/barang/' . $barang->barang_id).'" class="btn btn-info btn-sm">Detail</a> ';
+                $btn  = '<a href="'.url('/barang/' . $barang->barang_id).'" class="btn btn-info btn-sm">Detail</a> ';
                 // $btn .= '<a href="'.url('/barang/' . $barang->barang_id . '/edit').'" class="btn btn-warning btn-sm">Edit</a> ';
                 // $btn .= '<form class="d-inline-block" method="POST" action="'. url('/barang/'.$barang->barang_id).'">
                 //         '. csrf_field() . method_field('DELETE') .  
                 //         '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">Hapus</button></form>';
-                 $btn  = '<button onclick="modalAction(\''.url('/barang/' . $barang->barang_id . '/show_ajax').'\')" class="btn btn-info btn-sm">Detail</button> '; 
+                //  $btn  = '<button onclick="modalAction(\''.url('/barang/' . $barang->barang_id . '/show_ajax').'\')" class="btn btn-info btn-sm">Detail</button> '; 
                 $btn .= '<button onclick="modalAction(\''.url('/barang/' . $barang->barang_id . '/edit_ajax').'\')" class="btn btn-warning btn-sm">Edit</button> '; 
                 $btn .= '<button onclick="modalAction(\''.url('/barang/' . $barang->barang_id . '/delete_ajax').'\')"  class="btn btn-danger btn-sm">Hapus</button> '; 
 
@@ -236,10 +236,11 @@ class BarangController extends Controller
     {
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-                'kategori_id' => 'required|integer',
-                'nama_barang' => 'required|string|min:3|unique:m_barang,nama_barang,' . $id . ',barang_id',
-                'stok'        => 'required|integer|min:0',
-                'harga'       => 'required|numeric|min:0'
+            'kategori_id' => 'required|integer',
+            'barang_nama' => 'required|string|min:3|unique:m_barang,barang_nama,' . $id . ',barang_id',
+            'barang_kode' => 'required|string|min:3|max:50',
+            'harga_beli'  => 'required|numeric|min:0',
+            'harga_jual'  => 'required|numeric|min:0'
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -428,13 +429,15 @@ class BarangController extends Controller
                     ->with('kategori')
                     ->get();
 
-        // use Barryvdh\DomPDF\Facade\Pdf;
         $pdf = Pdf::loadView('barang.export_pdf', ['barang' => $barang]);
-        $pdf->setPaper('a4', 'portrait'); // set ukuran kertas dan orientasi
-        $pdf->setOption('isRemoteEnabled', true); // set true jika ada gambar dari url
-        $pdf->render();
+        $pdf->setPaper('a4', 'portrait');
+        $pdf->setOption('isRemoteEnabled', true);
 
-        return $pdf->stream('Data Barang ' . date('Y-m-d H:i:s') . '.pdf');
+        // Paksa download dengan header
+        return response($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="Data Barang ' . date('Y-m-d_H-i-s') . '.pdf"',
+        ]);
     }
 
 }
